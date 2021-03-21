@@ -30,7 +30,8 @@ namespace AccountManager
             });
 
             services.AddDbContext<AccountManagerContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("AccountManagerContext")));
+            //options.UseSqlServer(Configuration.GetConnectionString("AccountManagerContext"))); 
+            options.UseInMemoryDatabase(databaseName: "AcountManagerTestDB"));
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }

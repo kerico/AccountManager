@@ -19,7 +19,7 @@ namespace AccountManager.Data
         }
         public async Task<IEnumerable<Account>> GetAccountsFromDomain(string domainName)
         {
-            return await _context.Account.Where(a=> a.DomainName.Equals(domainName)).OrderBy(a => a.DomainName).ThenBy(a => a.AccountName).ToListAsync();
+            return await _context.Account.Where(a=> a.DomainName.ToLower().Equals(domainName.ToLower())).OrderBy(a => a.DomainName).ThenBy(a => a.AccountName).ToListAsync();
         }
         public async Task<Account> GetAccount(int accountID)
         {
@@ -28,7 +28,7 @@ namespace AccountManager.Data
         public async Task<Account> GetAccount(Account account)
         {
             var result = await _context.Account.FirstOrDefaultAsync(a =>
-            a.DomainName.Equals(account.DomainName)
+            a.DomainName.ToLower().Equals(account.DomainName.ToLower())
             && a.AccountName.Equals(account.AccountName));
 
             return result;
