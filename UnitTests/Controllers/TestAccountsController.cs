@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Http.Results;
 
 namespace UnitTests.Controllers
 {
@@ -54,6 +53,35 @@ namespace UnitTests.Controllers
             Assert.AreEqual(accounts.Count(), 2);
             Assert.IsFalse(accounts.Any(a => a == null));
             Assert.IsFalse(accounts.Any(a => !a.DomainName.Equals(domainName.ToLower())));
+        }
+        [Test]
+        public async Task CreateAccount_ShouldReturn400MessageWhenAddingAccountDublicate()
+        {
+            var accountDTO = new AccountDTO
+            {
+                DomainName = "domain3",
+                AccountName = "Account1",
+                Password = "Password1"
+            };
+            await _controller.CreateAccount(accountDTO);
+            var response = (await _controller.CreateAccount(accountDTO)).Result;
+
+            Assert.IsInstanceOf<BadRequestObjectResult>(response);
+        }
+        [Test]
+        public async Task CreateAccount_ShouldReturnReadableTextWhenAddingAccountDublicate()
+        {
+            var accountDTO = new AccountDTO
+            {
+                DomainName = "domain3",
+                AccountName = "Account1",
+                Password = "Password1"
+            };
+            await _controller.CreateAccount(accountDTO);
+            var response = (await _controller.CreateAccount(accountDTO)).Result as BadRequestObjectResult;
+
+            Assert.IsInstanceOf<string>(response.Value);
+            Assert.IsNotEmpty((string)response.Value);
         }
         private void SetupMapper()
         {
